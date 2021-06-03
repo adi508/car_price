@@ -66,16 +66,24 @@ category_colum = ['manufacturer_name','model_name','color','engine_fuel','engine
                   'body_type','state','drivetrain','location_region','transmission']
 
 # list of all columns with numeric value
-num_colum = ['odometer_value','year_produced','engine_capacity','price_usd',
-              'number_of_photos','up_counter','duration_listed']
+num_colum = ['odometer_value','year_produced','engine_capacity','number_of_photos',
+             'up_counter','duration_listed']
 
 # list of all columns with binary value ( True/False)
 bin_colum = ['feature_0','feature_1','feature_2','feature_3','feature_4','feature_5','feature_6',
              'feature_7','feature_8','feature_9','is_exchangeable','has_warranty','engine_has_gas']
 
+target_colum = ['price_usd']
 
+dic_of_colum_pickle = {'category_colum':category_colum,
+                       'num_colum':num_colum,
+                       'bin_colum':bin_colum,
+                       'target_colum':target_colum}
 
-
+print('test if sum of column is unchanged')
+if  not len(bin_colum )+len(num_colum )+len(target_colum)+len(category_colum)==len(data_raw.columns):
+    print('erorr!!!')
+    
 
 # binary data
 data_proce = data_raw.copy()
@@ -108,10 +116,19 @@ for col in category_colum:
 print(data_proce.describe())
 print(data_proce.head(10))
 
-filename = 'process_data'
-outfile = open(filename,'wb')
+filename_data = 'process_data'
+filename_dic_of_colu = 'dic_columns'
+
+outfile = open(filename_data,'wb')
 pickle.dump(data_proce,outfile)
 outfile.close()
+
+outfile = open(filename_dic_of_colu,'wb')
+pickle.dump(dic_of_colum_pickle,outfile)
+outfile.close()
+
+
+
 
 
 
