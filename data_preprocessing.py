@@ -59,41 +59,49 @@ class My_norm():
 data_path = r'cars.csv'
 
 data_raw = pd.read_csv(data_path)
-#print(data_raw.head())
 
+# list of all category columns bame
 category_colum = ['manufacturer_name','model_name','color','engine_fuel','engine_type',
-                  'body_type','state','drivetrain','location_region',]
+                  'body_type','state','drivetrain','location_region','transmission']
+
+# list of all columns with numeric value
 num_colum = ['odometer_value','year_produced','engine_capacity','price_usd',
               'number_of_photos','up_counter','duration_listed']
 
-bin_colum = ['feature_0',
-              'feature_1','feature_2','feature_3','feature_4','feature_5','feature_6','feature_7',
-              'feature_8','feature_9','is_exchangeable','has_warranty','engine_has_gas']
+# list of all columns with binary value ( True/False)
+bin_colum = ['feature_0','feature_1','feature_2','feature_3','feature_4','feature_5','feature_6',
+             'feature_7','feature_8','feature_9','is_exchangeable','has_warranty','engine_has_gas']
 
-category2_colum = ['transmission']
 
-# preproces data-
 
-#binaryi data
+
+
+# binary data
 data_proce = data_raw.copy()
 for col in bin_colum:
+    #if value True, insert 1
     data_proce.loc[data_raw[col],col]=1
-    data_proce.loc[data_raw[col]==False,col]=0
+    #if value False, insert 0
+    data_proce.loc[data_raw[col]==False,col]=0 
 
 # num data
 for col in num_colum:
     print('start norm',col)
+    # define norm object
     temp_norm = My_norm()
+    # fit norm to the colum data
     temp_norm.fit(data_raw[col])
-    data_proce[col] = temp_norm(data_raw[col])
+    # calculale norm for all the column 
+    data_proce[col] = temp_norm(data_raw[col]) 
 
 #category data
 for col in category_colum:
     print('convert category to int',col)
-    category_name = np.unique(data_raw[col])
-    #print(len(category_name))
+    # crate a list of all the unique category in a singal column
+    category_name = np.unique(data_raw[col]) 
+    # creat a dictionary: {category name:int} => [a,aa,b,ac] => {a:0,aa:1,b:2,ac:3}
     temp_dic  = {category_name[i]: i for i in range(0, len(category_name))}
-    #print(temp_dic)
+    # convert category name in integer by dictionary
     data_proce = data_proce.replace({col: temp_dic})
     
 print(data_proce.describe())
