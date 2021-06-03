@@ -88,13 +88,16 @@ if  not len(bin_colum )+len(num_colum )+len(target_colum)+len(category_colum)==l
 # binary data
 data_proce = data_raw.copy()
 for col in bin_colum:
+    print('bin_colum:',col)
     #if value True, insert 1
     data_proce.loc[data_raw[col],col]=1
     #if value False, insert 0
     data_proce.loc[data_raw[col]==False,col]=0 
+    data_proce[col] = pd.Series(data_proce[col], dtype='int32')
+
 
 # num data
-for col in num_colum:
+for col in (num_colum+target_colum):
     print('start norm',col)
     # define norm object
     temp_norm = My_norm()
@@ -112,10 +115,17 @@ for col in category_colum:
     temp_dic  = {category_name[i]: i for i in range(0, len(category_name))}
     # convert category name in integer by dictionary
     data_proce = data_proce.replace({col: temp_dic})
-    
+
+#test all data and look for nan value
 print(data_proce.describe())
 print(data_proce.head(10))
+print(data_proce.isnull().sum()) # 10 nan in "engine_capacity"
+data_proce["engine_capacity"].fillna((data_proce["engine_capacity"].mean()), inplace=True)
+print(data_proce.isnull().sum()) # 10 nan in "engine_capacity"
+print(data_proce.dtypes) # all column are int or float
 
+
+# pickle data for model
 filename_data = 'process_data'
 filename_dic_of_colu = 'dic_columns'
 
