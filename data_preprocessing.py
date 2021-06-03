@@ -9,6 +9,7 @@ Created on Wed Jun  2 10:07:00 2021
 import pandas as pd
 import numpy as np
 from scipy.stats import rankdata
+import pickle
 
 class My_norm():
     # norm of array by rank
@@ -107,7 +108,10 @@ for col in category_colum:
 print(data_proce.describe())
 print(data_proce.head(10))
 
-
+filename = 'process_data'
+outfile = open(filename,'wb')
+pickle.dump(data_proce,outfile)
+outfile.close()
 
 
 
