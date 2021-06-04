@@ -76,7 +76,7 @@ model_full = tf.keras.models.Model(inputs = inputs,
 model_full.summary()
 
 my_adam = tf.keras.optimizers.Adam(learning_rate=0.001)
-model_full.compile(loss='mean_squared_error',
+model_full.compile(loss='log_cosh',
                    optimizer=my_adam)
 
 #model_full.fit(input_dict,all_data['price_usd'],epochs=50,batch_size=256)
@@ -90,13 +90,13 @@ early_stopping = tf.keras.callbacks.EarlyStopping(
 history = model_full.fit(input_dict,
                          all_data['price_usd'],
                          batch_size=512,
-                         epochs=1000,
+                         epochs=20,
                          validation_split=0.2,
                          callbacks=[early_stopping]
                          )
 
-
-
+history = history.cumsum()
+history.plot()
 
 
 
